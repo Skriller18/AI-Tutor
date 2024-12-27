@@ -1,4 +1,4 @@
-# Indri Web App
+# AI Tutor
 
 Install Node.js using nvm.
 
