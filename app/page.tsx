@@ -22,14 +22,19 @@ const DrawBoard = () => {
     setQuestion(questions[Math.floor(Math.random() * questions.length)]);
   }, []);
 
-  const handleSolve = async () => {
-    try {
-      const solution = await apiClient.solve(question);
+const handleSolve = async () => {
+  try {
+    chatWindowRef.current?.addSolutionMessage("Calculating solution...");
+    
+    const solution = await apiClient.solve(question);
+    if (solution) {
       chatWindowRef.current?.addSolutionMessage(solution);
-    } catch (error) {
-      console.error("Error solving problem:", error);
     }
-  };
+  } catch (error) {
+    console.error("Error solving problem:", error);
+    chatWindowRef.current?.addSolutionMessage("Sorry, there was an error solving the problem.");
+  }
+};
 
   const handleHint = async () => {
     try {

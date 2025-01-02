@@ -7,7 +7,7 @@ import { MathSolutionDisplay } from './MathSolutionDisplay';
 interface Message {
   text: string;
   isUser: boolean;
-  isSolution?: boolean;
+  type: 'text' | 'solution';
   solution?: string;
 }
 
@@ -27,9 +27,9 @@ const ChatWindow = forwardRef<ChatWindowRef, ChatWindowProps>(({ className }, re
   useImperativeHandle(ref, () => ({
     addSolutionMessage: (solution: string) => {
       setMessages(prev => [...prev, {
-        text: "Here's the solution to your problem:",
+        text: "Here's the solution:",
         isUser: false,
-        isSolution: true,
+        type: 'solution',
         solution: solution
       }]);
     }
@@ -39,12 +39,17 @@ const ChatWindow = forwardRef<ChatWindowRef, ChatWindowProps>(({ className }, re
     e.preventDefault();
     if (!inputText.trim()) return;
 
-    setMessages(prev => [...prev, { text: inputText, isUser: true }]);
+    setMessages(prev => [...prev, { 
+      text: inputText, 
+      isUser: true, 
+      type: 'text' 
+    }]);
     
     setTimeout(() => {
       setMessages(prev => [...prev, { 
         text: "I'll help you solve this problem. What specific part are you stuck on?", 
-        isUser: false 
+        isUser: false,
+        type: 'text'
       }]);
     }, 500);
 
@@ -52,7 +57,7 @@ const ChatWindow = forwardRef<ChatWindowRef, ChatWindowProps>(({ className }, re
   };
 
   return (
-    <Card className={`flex flex-col h-full ${className}`}>
+    <Card className={`flex flex-col h-full border-gray-700 bg-gray-800 ${className}`}>      
       <div className="p-4 border-b border-gray-700">
         <h3 className="text-lg font-semibold text-gray-200">Chat Assistant</h3>
       </div>
@@ -63,26 +68,24 @@ const ChatWindow = forwardRef<ChatWindowRef, ChatWindowProps>(({ className }, re
             key={index}
             className={`flex ${message.isUser ? 'justify-end' : 'justify-start'} w-full`}
           >
-            {message.isSolution ? (
-              <div className="bg-gray-800 rounded-lg p-4 max-w-[90%] w-full">
-                <p className="text-gray-200 mb-2">{message.text}</p>
-                {message.solution && (
-                  <div className="mt-2 border-t border-gray-700 pt-2">
-                    <MathSolutionDisplay solution={message.solution} />
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div
-                className={`max-w-[70%] rounded-lg p-3 ${
-                  message.isUser
-                    ? 'bg-blue-600 text-white'
-                    : 'bg-gray-700 text-gray-200'
-                }`}
-              >
-                {message.text}
-              </div>
-            )}
+            <div
+              className={`${
+                message.type === 'solution' 
+                  ? 'bg-gray-800 rounded-lg p-4 max-w-[90%] w-full'
+                  : `max-w-[70%] rounded-lg p-3 ${
+                      message.isUser
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-gray-700 text-gray-200'
+                    }`
+              }`}
+            >
+              <p className="text-gray-200">{message.text}</p>
+              {message.type === 'solution' && message.solution && (
+                <div className="mt-2 border-t border-gray-700 pt-2">
+                  <MathSolutionDisplay solution={message.solution} />
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>

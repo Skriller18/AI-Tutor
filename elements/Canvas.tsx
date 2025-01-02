@@ -81,17 +81,17 @@ const Canvas = React.forwardRef<HTMLCanvasElement, CanvasProps>((props, ref) => 
   return (
     <div className="relative">
       <CanvasDrawWithRef
-        ref={canvasRef}
-        brushColor={brushColor}
-        brushRadius={brushRadius}
-        lazyRadius={0}
-        canvasWidth={typeof window !== 'undefined' ? window.innerWidth - 450 : 0}
-        canvasHeight={typeof window !== 'undefined' ? window.innerHeight - 100 : 0}
-        hideGrid={true}
-        backgroundColor="#2D2D2D"
-        className="rounded-lg border border-gray-700"
-      />
-      
+      ref={canvasRef}
+      brushColor={brushColor}
+      brushRadius={brushRadius}
+      lazyRadius={0}
+      canvasWidth={typeof window !== 'undefined' ? Math.max(window.innerWidth - 550, 500) : 500}
+      canvasHeight={typeof window !== 'undefined' ? Math.max(window.innerHeight - 200, 400) : 400}
+      hideGrid={true}
+      backgroundColor="#2D2D2D"
+      className="rounded-lg border border-gray-700"
+    />
+  
       <div className="absolute top-4 left-4 flex flex-col gap-4 bg-gray-800/90 p-4 rounded-2xl backdrop-blur-sm">
         <div className="flex flex-col gap-2">
           <TooltipProvider>
