@@ -15,9 +15,7 @@ export const apiClient = {
       const response = await axiosInstance.post(`/solve?question=${encodeURIComponent(question)}`);
       return response.data.solution;
     } catch (error: any) {
-      if (error.response?.status === 422) {
-        console.error('Invalid request format:', error.response.data);
-      }
+      console.error('Solve error:', error);
       throw error;
     }
   },
@@ -25,7 +23,7 @@ export const apiClient = {
   async getHint(question: string, drawboardImage: Blob) {
     try {
       const formData = new FormData();
-      formData.append('image', drawboardImage);
+      formData.append('image', drawboardImage, 'drawing.png'); 
       
       const response = await axiosInstance.post(`/hint?question=${encodeURIComponent(question)}`, formData, {
         headers: {
@@ -42,14 +40,14 @@ export const apiClient = {
   async checkSolution(question: string, drawboardImage: Blob) {
     try {
       const formData = new FormData();
-      formData.append('image', drawboardImage);
+      formData.append('image', drawboardImage, 'drawing.png'); 
       
       const response = await axiosInstance.post(`/correct?question=${encodeURIComponent(question)}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
       });
-      return response.data.hint;
+      return response.data.correction; 
     } catch (error) {
       console.error('Check solution error:', error);
       throw error;
